@@ -1,3 +1,4 @@
+require 'sugar-high/class_ext'
 module Behave
   class BaseLoader
     attr_reader :strategy, :orm
@@ -31,3 +32,5 @@ module Behave
       ns
     end      
   end
+
+end

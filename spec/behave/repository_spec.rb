@@ -5,6 +5,10 @@ require 'behave/spec_helper'
 
 describe Behave::Repository do
   describe '#add_behavior' do
+    after(:each) do
+      Behave::Repository.empty!
+    end
+
     it 'should add a named behavior' do
       Behave::Repository.add_behavior(:hello).should be_a(Behave::Decorator)
     end
@@ -16,7 +20,13 @@ describe Behave::Repository do
     end
   end
 
-  describe '#behaviors' do  
+  describe '#behaviors' do 
+    before(:all) do
+      Behave::Repository.add_behavior(:hello) do |behavior|
+        behavior.should be_a(Behave::Decorator)
+      end
+    end
+
     it 'should contain global behaviors' do
       Behave::Repository.behaviors.should_not be_empty
     end
@@ -28,7 +38,7 @@ describe Behave::Repository do
 
   describe 'behavior' do  
     it 'should have behavior' do
-      Behave::Repository.behaviors[:hello].config.should be_a(Behave::Config)
+      pending
     end
   end  
 end

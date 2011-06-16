@@ -18,7 +18,7 @@ module Behave
       @configuration_class || Configuration
     end
         
-    def configure strategy, options = {}, &block
+    def configure! strategy = :default, options = {}, &block
       configuration = configuration_class.new self, strategy, options
 
       configuration.load_adapter

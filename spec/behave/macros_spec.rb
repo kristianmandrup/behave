@@ -36,36 +36,50 @@ module Hello
 end
 
 describe Behave::Macros do
-  describe '#behave!'
+ 
+  before(:all) do
+    Behave::Repository.empty! # need to do this, because of running the whole spec suite
+  end
+
+  describe '#behave!' do
     it 'should add behaviors hash' do
       User.behave!
-      User.behaviors.should be_empty
+      User.behaviors.should be_kind_of(Hash) 
     end
   end
   
-  describe '#behavior'  
-    before do
-      Behave.add_behavior(:hello) do |behavior|
-        behavior.configuration_class = MyBehavior::Configuration
-      end    
+  describe '#behavior' do 
+    before(:all) do
+      Behave::Repository.add_behavior(:hello) do |behavior|
+        behavior.configuration_class = Hello::Configuration
+      end
     end
 
     it 'should add behavior' do
-      User.behavior(:my_behavior)
+      User.behavior(:hello).should_not be_nil
     end
     
     it 'should configure User with hello method that returns message' do
-      User.behavior(:my_behavior).strategy :default do |c|
+      User.behavior(:hello) do |c|
         c.message = 'hello'
-      end.configure!
+      end.configure! :default
       
       User.hello.should == 'hello'
     end
   end
 
-  describe '#has_behavior?'  
+  describe '#has_behavior?' do 
+    before(:all) do
+      Behave::Repository.empty!
+      Behave::Repository.add_behavior(:hello) do |behavior|
+        behavior.configuration_class = Hello::Configuration
+      end 
+    end
+    
     it 'should have behavior' do
-      User.has_behavior?(:my_behavior).should be_true
+      User.behave!
+      User.behavior(:hello).configure!
+      User.has_behavior?(:hello).should be_true
     end
   end  
 end

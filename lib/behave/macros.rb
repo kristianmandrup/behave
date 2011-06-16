@@ -14,14 +14,13 @@ module Behave
     def behave!
       self.singleton_class.class_eval %{
         def behaviors
-          @behaviors ||= {}
+          @behaviors ||= Behave::Repository.behaviors
         end
       }
     end
     
     def behavior name
       behave! unless respond_to? :behaviors
-      raise ArgumentError, "Behavior '#{name}' already available" if has_behavior?(name)
       behaviors[name.to_sym]
     end
     
