@@ -1,13 +1,14 @@
 require 'sugar-high/class_ext'
 module Behave
   class BaseLoader
-    attr_reader :strategy, :orm
+    attr_reader :name, :strategy, :orm
 
     include ClassExt
     
-    def initialize strategy, orm
+    def initialize name, strategy, orm
+      @name = name
       @strategy = strategy
-      @orm = orm || Troles::Config.default_orm
+      @orm = orm || Behave::Config.default_orm
     end
 
     def singularity
@@ -23,7 +24,7 @@ module Behave
     end
 
     def namespace
-      singularity == :many ? 'Troles' : 'Trole'      
+      name.to_s.camelize
     end
 
     def orm_namespace

@@ -2,10 +2,11 @@ module Behave
   class Decorator    
     class Configuration
             
-      attr_reader :strategy, :orm, :auto_load, :options, :subject_class 
+      attr_reader :name, :strategy, :orm, :auto_load, :options, :subject_class 
       attr_writer :config_class, :storage_class
       
-      def initialize subject_class, strategy, options = {}
+      def initialize name, subject_class, strategy, options = {}
+        @name = name
         @subject_class = subject_class
         @strategy = strategy
         @orm = options[:orm] || Behave::Config.default_orm
@@ -16,7 +17,7 @@ module Behave
         classes = options.select{|k, v| k.to_s =~ /_class$/} # extract keys ending with _class
         options.delete_if {|k,v| classes.include? k} # remaining keys are normal options
 
-        # set config_class etc. using hash
+        # set config_class etc. using hash (optional config option in case you want to override defaults)
         classes.each_pair do |name, clazz|
           meth = "#{name}_class="
           send(meth, clazz) if self.respond_to?(meth) && clazz.is_a(Class)
@@ -37,53 +38,55 @@ module Behave
         end
       end
 
+      # see(#load_adapter)
       def namespace
-        behavior.name
+        name
       end
 
-      # storage
+      # whether to auto load an ORM adapter
+      # see(#load_adapter)
+      def auto_load?
+        (auto_load && orm) || false
+      end  
 
       # used to turn storage on/off ?
+      # some behaviors have no storage need
       def storage?
         options[:storage]
       end
 
-      def storage_class
-        @storage_class || storage_loader.storage_class
-      end
-
-      def storage_loader
-        @storage_loader ||= StorageLoader.new strategy, orm
-      end
-
-      # config
-
       # used to turn config on/off ?
+      # some behaviors have no config, and imply need to apply an API via the strategy module!
       def config?
         options[:config]
+      end
+
+      # use loaders to try to find classses using naming conventions
+      def storage_class
+        @storage_class || storage_loader.storage_class
       end
 
       def config_class
         @config_class || config_loader.config_class
       end
 
-      def config_loader
-        @config_loader ||= ConfigLoader.new strategy, orm
-      end
-
-      # strategy
-
       def strategy_module
         strategy_loader.strategy_module
       end
 
-      def strategy_loader
-        @strategy_loader ||= StrategyLoader.new strategy, orm
+      protected
+
+      def storage_loader
+        @storage_loader ||= StorageLoader.new name, strategy, orm
       end
 
-      def auto_load?
-        (auto_load && orm) || false
-      end  
+      def config_loader
+        @config_loader ||= ConfigLoader.new name, strategy, orm
+      end
+
+      def strategy_loader
+        @strategy_loader ||= StrategyLoader.new name, strategy, orm
+      end
     end
   end
 end

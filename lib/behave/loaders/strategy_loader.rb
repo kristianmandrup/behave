@@ -1,7 +1,7 @@
 module Behave
   class StrategyLoader < BaseLoader
 
-    def initialize strategy, orm
+    def initialize name, strategy, orm
       super
     end      
     

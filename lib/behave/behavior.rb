@@ -20,7 +20,7 @@ module Behave
     # and how can we make a flexible hook-system for these?    
     def configure_with strategy = :default, options = {}, &block
       # create instance of configuration class from repo
-      configuration = configuration_class.new subject_class, strategy, options
+      configuration = configuration_class.new name, subject_class, strategy, options
 
       # use configuration to load adapter!
       configuration.load_adapter      
@@ -50,19 +50,19 @@ module Behave
 
     # @return [Behave::Storage] instance of Behave::Storage subclass specific for that behavior
     def store
-      @storage ||= storage_class
+      @store ||= storage_class
     end
     
     protected
 
     # For behavior :troles, defaults to Troles::Config    
     def config_class
-      @config_class ||= configuration.config_class  || "#{namespace}::Config".constantize
+      @config_class ||= configuration.config_class
     end
 
     # For behavior :troles, defaults to Troles::Storage 
     def storage_class
-      @storage_class ||= configuration.storage_class || "#{namespace}::Storage".constantize
+      @storage_class ||= configuration.storage_class
     end
 
     # if behavior is names trole, namespace becomes Troles
