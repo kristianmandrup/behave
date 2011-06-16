@@ -2,7 +2,8 @@ module Behave
   class Decorator    
     class Configuration
             
-      attr_reader :strategy, :orm, :auto_load, :options, :subject_class, :behavior
+      attr_reader :strategy, :orm, :auto_load, :options, :subject_class 
+      attr_writer :config_class, :storage_class
       
       def initialize subject_class, strategy, options = {}
         @subject_class = subject_class
@@ -11,6 +12,16 @@ module Behave
         @auto_load = options[:auto_load]
 
         options[:strategy] = strategy
+        
+        classes = options.select{|k, v| k.to_s =~ /_class$/} # extract keys ending with _class
+        options.delete_if {|k,v| classes.include? k} # remaining keys are normal options
+
+        # set config_class etc. using hash
+        classes.each_pair do |name, clazz|
+          meth = "#{name}_class="
+          send(meth, clazz) if self.respond_to?(meth) && clazz.is_a(Class)
+        end
+        
         @options = options
       end
 
@@ -26,67 +37,49 @@ module Behave
         end
       end
 
-      # applying options means to set attributes on the config object according to the key/values
-      # of the options hash
-      def apply_strategy_options!
-        behavior.config.apply_options! options
-      end      
-
-      # # defines hook methods on the behavior
-      # def define_hooks
-      #   setup_storage if storage?
-      #   setup_config if config?
-      # end
-      # 
-      # # setup storage hook method on behavior to point to storage class
-      # def setup_storage
-      #   storage_class = storage_loader.storage_class
-      #   behavior.send :define_method, :storage do 
-      #     @storage ||= storage_class
-      #   end
-      # end
-      # 
-      # # setup config hook method on behavior to point to config class
-      # def setup_config
-      #   config_class = config_loader.config_class
-      #   puts "config_class: #{config_class}" if Behave::Config.log_on
-      #   behavior.singleton_class.class_eval %{
-      #     def config
-      #       @config ||= #{config_class}.new #{subject_class}, #{options.inspect}
-      #     end
-      #   }
-      # end
-
-      def strategy_module
-        strategy_loader.strategy_module
+      def namespace
+        behavior.name
       end
 
-      protected
+      # storage
 
+      # used to turn storage on/off ?
       def storage?
         options[:storage]
       end
 
-      def config?
-        options[:config]
-      end
-
-      def namespace
-        behavior.name
+      def storage_class
+        @storage_class || storage_loader.storage_class
       end
 
       def storage_loader
         @storage_loader ||= StorageLoader.new strategy, orm
       end
 
+      # config
+
+      # used to turn config on/off ?
+      def config?
+        options[:config]
+      end
+
+      def config_class
+        @config_class || config_loader.config_class
+      end
+
       def config_loader
         @config_loader ||= ConfigLoader.new strategy, orm
+      end
+
+      # strategy
+
+      def strategy_module
+        strategy_loader.strategy_module
       end
 
       def strategy_loader
         @strategy_loader ||= StrategyLoader.new strategy, orm
       end
-
 
       def auto_load?
         (auto_load && orm) || false

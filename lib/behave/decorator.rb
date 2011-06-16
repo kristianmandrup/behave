@@ -17,6 +17,11 @@ module Behave
     def configuration_class
       @configuration_class || Configuration
     end
+    
+    def decorate subject_class
+      behavior = create_behavior_for(subject_class)
+      behavior.apply!
+    end
 
     def create_behavior_for subject_class
       Behave::Behavior.new name, subject_class, configuration_class

@@ -79,12 +79,30 @@ end
 
 This will initially add a #behaviors collection to the subject class/module at the class level. 
 
-The #behaviors collection is populated by instanced og Behave::Behavior. Each such behavior has a relationship to a Behave::Decorator in the repository with the same name.
+<pre>
+User
+  behaviors
+    :trole  -> Behave::Behavior
+    :troles -> Behave::Behavior
+    ...
+</pre>    
+
+
+The #behaviors collection is populated by instanced of Behave::Behavior. Each such behavior has a relationship to a Behave::Decorator in the repository with the same name.
+
+<pre>
+Behave::Repository
+  registered_behaviors
+    :trole -> Behave::Decorator  
+</pre>
+
 A Behave::Decorator instance has a Behave::Configuration object that knows how to configure the behavior in a given context.
 
-The Behave::Decorator::Configuration encapsulates concepts such as storage, strategy etc. and can do schema/model configuration (using schemaker) etc.
+The Behave::Decorator::Configuration encapsulates concepts such as storage, strategy etc. and can do schema/model configuration (using schemaker). 
 
-The Behave::Behavior knows how to configure the _subject_class_, using an instance of Behave::Decorator::Configuration (from the repo) which is created for that purpose and passed enough information so it can do its magic!
+Given strategy and orm and some other options, the Behave::Decorator::Configuration instance will know how to load the right data store adapter and find the righ classes for storage, strategy etc. using loaders for the job.
+
+The Behave::Behavior instance will configure the subject using the Behave::Decorator#decorate method.
 
 The result of the #behavior call is a Behave::Behavior object. If you call #configure_with on this Behavior object, you can configure how the behavior is to be applied to the subject. The result of the #configure is a Behave::Config object, where you then lastly call #configure! to apply the configurations on the subject (late binding). 
 See the code for more details...
