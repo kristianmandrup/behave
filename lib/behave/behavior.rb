@@ -16,13 +16,17 @@ module Behave
     end
 
     # configures the behavior for the specific subject class
+    # what should really happen here?
+    # what is the minimal list of things to do for any behavior, and what are the nice "add-ons" 
+    # and how can we make a flexible hook-system for these?
+    
     def configure_with strategy = :default, options = {}, &block
       configuration = configuration_class.new subject_class, strategy, options
 
       configuration.load_adapter      
       subject_class.send :include, configuration.strategy_module
 
-      configuration.define_hooks
+      # configuration.define_hooks
       configuration.apply_strategy_options!
       
       yield config if block_given?

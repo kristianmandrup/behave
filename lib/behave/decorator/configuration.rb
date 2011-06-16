@@ -32,30 +32,30 @@ module Behave
         behavior.config.apply_options! options
       end      
 
-      # defines hook methods on the behavior
-      def define_hooks
-        setup_storage if storage?
-        setup_config if config?
-      end
-
-      # setup storage hook method on behavior to point to storage class
-      def setup_storage
-        storage_class = storage_loader.storage_class
-        behavior.send :define_method, :storage do 
-          @storage ||= storage_class
-        end
-      end
-
-      # setup config hook method on behavior to point to config class
-      def setup_config
-        config_class = config_loader.config_class
-        puts "config_class: #{config_class}" if Behave::Config.log_on
-        behavior.singleton_class.class_eval %{
-          def config
-            @config ||= #{config_class}.new #{subject_class}, #{options.inspect}
-          end
-        }
-      end
+      # # defines hook methods on the behavior
+      # def define_hooks
+      #   setup_storage if storage?
+      #   setup_config if config?
+      # end
+      # 
+      # # setup storage hook method on behavior to point to storage class
+      # def setup_storage
+      #   storage_class = storage_loader.storage_class
+      #   behavior.send :define_method, :storage do 
+      #     @storage ||= storage_class
+      #   end
+      # end
+      # 
+      # # setup config hook method on behavior to point to config class
+      # def setup_config
+      #   config_class = config_loader.config_class
+      #   puts "config_class: #{config_class}" if Behave::Config.log_on
+      #   behavior.singleton_class.class_eval %{
+      #     def config
+      #       @config ||= #{config_class}.new #{subject_class}, #{options.inspect}
+      #     end
+      #   }
+      # end
 
       def strategy_module
         strategy_loader.strategy_module
