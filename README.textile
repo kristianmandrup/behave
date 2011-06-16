@@ -4,42 +4,92 @@ A standard pattern to easily define and add behavior to a global behavior reposi
 Ruby classes of your choice. The Behave pattern will be demonstrated by the _troles_ gems for adding role behavior.
 Behave also makes it easy to support multiple kinds of datastores via the _schemaker_ gem, that takes care of configuring your model relationships.  
 
+h2. Design
+
+<pre>
+  Behave::Config
+    subject_class
+    strategy
+    orm
+    
+    #configure! - applies the configuration to the subject class or module  
+</pre>
+
+<pre>
+User
+  behaviors
+    :trole
+      Behave::Behavior
+        name
+        subject_class
+        configuration_class -> Behave::Decorator::Configuration
+        
+        config  -> Trole::Config instance
+        store   -> Trole::Storage instance
+    :troles =>
+      Behave::Behavior
+        config  -> Troles::Config instance
+        store   -> Troles::Storage instance
+        
+    
+Behave::Repository
+  registered_behaviors
+    :trole  
+      Behave::Decorator
+        configuration_class
+
+    :troles
+      Behave::Decorator
+        configuration_class - inherits from module Behave::Decorator::Configuration
+          strategy
+          orm
+          behavior
+          config_class  - Troles::Config <  Behave::Config
+          storage_class - Troles::Storage < Behave::Storage
+
+          #load_adapter
+          #setup_storage
+          #setup_config
+</pre>
+
 h2. Usage
 
-First you must define your behavior and then add it to the singleton Behavior Repository like this:
+Note. In the following, the 'subject' is the module or class that is the target on which to apply the behavior.
+
+First you must define your behavior and then register it to the singleton Behavior Repository like this:
 
 <pre>
-  Behave::Repository.add_behavior(:hello) do |behavior|
-    behavior.configuration_class = MyBehavior::Configuration
-  end      
+Behave::Repository.register_behavior(:hello) do |behavior|
+  behavior.configuration_class = MyBehavior::Configuration
+end      
 </pre>
 
-Then you can apply the behavior to various modules/classes as you need via the #behavior macro.
+This is something you do for your Behavior "plugin". This step has no relation to how it is used and configured on the subject.
 
-<pre>
-  class User  
-    behavior(:trole_groups).configure :strategy => :ref_one do |config|
-      ... # your config here!
-    end.configure!
-</pre>
-
-This will add a #behaviors collection at the class level, where each item is a Behave::Decorator instance. 
-Each such Behave::Decorator instance has a Behave::Configuration object that configures it.
-
-The Behave::Configuration encapsulates concepts such as storage, strategy etc. and can do schema/model configuration (using schemaker) etc.
+After you have registered a behavior, you can apply it to various subjects (modules or classes) by using the #behavior macro, made available for any Module.
 
 <pre>
 class User  
-  behavior(:trole_groups).configure(:strategy) :ref_one do |strategy|
+  behavior(:trole_groups).configure_with :strategy => :ref_one do |config|
     strategy.orm = :mongoid
     strategy.auto_load = true
   end.configure!
-end  
+end
 </pre>
 
-The result of the #behavior call is a Behave::Config object (you must inherit from and override as necessary), where you then latsly call #configure to apply the configurations on the module or class (the subject). Enjoy!
+This will initially add a #behaviors collection to the subject class/module at the class level. 
 
-See the code for more details for now. This is currently work in progress...
+The #behaviors collection is populated by instanced og Behave::Behavior. Each such behavior has a relationship to a Behave::Decorator in the repository with the same name.
+A Behave::Decorator instance has a Behave::Configuration object that knows how to configure the behavior in a given context.
+
+The Behave::Decorator::Configuration encapsulates concepts such as storage, strategy etc. and can do schema/model configuration (using schemaker) etc.
+
+The Behave::Behavior knows how to configure the _subject_class_, using an instance of Behave::Decorator::Configuration (from the repo) which is created for that purpose and passed enough information so it can do its magic!
+
+The result of the #behavior call is a Behave::Behavior object. If you call #configure_with on this Behavior object, you can configure how the behavior is to be applied to the subject. The result of the #configure is a Behave::Config object, where you then lastly call #configure! to apply the configurations on the subject (late binding). 
+See the code for more details...
+
+Note: This is currently work in progress... the above is subject to change!
 
 h2. Contributing to behave
  
