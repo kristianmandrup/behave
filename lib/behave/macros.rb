@@ -25,7 +25,7 @@ module Behave
       behaviors[name.to_sym]
     end
     
-    def has_behavior?
+    def has_behavior? name
       return false unless respond_to? :behaviors
       behaviors.keys.include? name.to_sym
     end
