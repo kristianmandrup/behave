@@ -6,9 +6,24 @@ Behave also makes it easy to support multiple kinds of datastores via the _schem
 
 h2. Usage
 
-The idea is that you should be able to apply the behave pattern on a class:
+First you must define your behavior and then add it to the singleton Behavior Repository like this:
 
-This will add a #behavior collection at the class level, where each item is a Behave::Decorator instance. 
+<pre>
+  Behave::Repository.add_behavior(:hello) do |behavior|
+    behavior.configuration_class = MyBehavior::Configuration
+  end      
+</pre>
+
+Then you can apply the behavior to various modules/classes as you need via the #behavior macro.
+
+<pre>
+  class User  
+    behavior(:trole_groups).configure :strategy => :ref_one do |config|
+      ... # your config here!
+    end.configure!
+</pre>
+
+This will add a #behaviors collection at the class level, where each item is a Behave::Decorator instance. 
 Each such Behave::Decorator instance has a Behave::Configuration object that configures it.
 
 The Behave::Configuration encapsulates concepts such as storage, strategy etc. and can do schema/model configuration (using schemaker) etc.
@@ -21,6 +36,8 @@ class User
   end.configure!
 end  
 </pre>
+
+The result of the #behavior call is a Behave::Config object (you must inherit from and override as necessary), where you then latsly call #configure to apply the configurations on the module or class (the subject). Enjoy!
 
 See the code for more details for now. This is currently work in progress...
 
