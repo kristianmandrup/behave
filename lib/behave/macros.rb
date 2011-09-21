@@ -9,7 +9,7 @@
 #     troles_strategy :bit_many
 #
 
-module Behave  
+module Behave
   module Macros
     # Adds a behaviors collection to the subject class or module
     # This collection should initially be empty
@@ -25,12 +25,20 @@ module Behave
 
     # returns the given named behavior from the subject's list of behaviors
     # @return [Behave::Behavior] the named behavior
-    def behavior name
-      behave! unless respond_to? :behaviors      
+    def behavior name, &block
+      behave! unless respond_to? :behaviors
       return behaviors[name.to_sym] if has_behavior? name
-      
-      decorator = Behave::Repository.behavior[name]
-      behaviors[name.to_sym] = decorator.create_behavior_for self
+
+      decorator = Behave::Repository.behavior name
+      puts "Decorator:" << decorator.inspect
+      puts "BHH" << decorator.create_behavior_for(self).inspect
+
+      behaviors[name.to_sym] = decorator.create_behavior_for(self)
+      result = behaviors[name.to_sym]
+      puts "Res:" << result.inspect
+
+      yield result if block
+      result
     end
 
     # @return [true, false] true if the given behavior is already in the subject's list of behaviors
@@ -38,7 +46,7 @@ module Behave
       return false unless respond_to? :behaviors
       behaviors.keys.include? name.to_sym
     end
-  end  
+  end
 end
 
 Module.send :include, Behave::Macros

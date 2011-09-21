@@ -1,19 +1,20 @@
-module Behave  
-  class Decorator    
+module Behave
+  class Decorator
     class Configuration
-            
-      attr_reader :name, :strategy, :orm, :auto_load, :options, :subject_class 
+
+      attr_accessor :strategy
+      attr_reader :name, :orm, :auto_load, :options, :subject_class
       attr_writer :config_class, :storage_class
-      
-      def initialize name, subject_class, strategy, options = {}
+
+      def initialize name, subject_class, options = {}
         @name = name
         @subject_class = subject_class
-        @strategy = strategy
+        @strategy = options[:strategy]
         @orm = options[:orm] || Behave::Config.default_orm
         @auto_load = options[:auto_load]
 
         options[:strategy] = strategy
-        
+
         classes = options.select{|k, v| k.to_s =~ /_class$/} # extract keys ending with _class
         options.delete_if {|k,v| classes.include? k} # remaining keys are normal options
 
@@ -22,7 +23,7 @@ module Behave
           meth = "#{name}_class="
           send(meth, clazz) if self.respond_to?(meth) && clazz.is_a(Class)
         end
-        
+
         @options = options
       end
 
@@ -47,7 +48,7 @@ module Behave
       # see(#load_adapter)
       def auto_load?
         (auto_load && orm) || false
-      end  
+      end
 
       # used to turn storage on/off ?
       # some behaviors have no storage need
@@ -76,16 +77,12 @@ module Behave
 
       protected
 
-      def storage_loader
-        @storage_loader ||= StorageLoader.new name, strategy, orm
-      end
-
-      def config_loader
-        @config_loader ||= ConfigLoader.new name, strategy, orm
-      end
-
-      def strategy_loader
-        @strategy_loader ||= StrategyLoader.new name, strategy, orm
+      [:storage, :config, :strategy].each do |type|
+        class_eval %{
+          def #{type}_loader
+            @#{type}_loader ||= #{type.to_s.camelize}Loader.new name, strategy, orm
+          end
+        }
       end
     end
   end

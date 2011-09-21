@@ -3,11 +3,11 @@ module Behave
 
     def initialize name, strategy, orm
       super
-    end      
-    
+    end
+
     def strategy_module
-      @strategy_module ||= orm_strategy_module || generic_strategy_module        
-    end  
+      @strategy_module ||= orm_strategy_module || generic_strategy_module
+    end
 
     protected
 

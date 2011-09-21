@@ -1,18 +1,18 @@
 require 'behave/spec_helper'
 
-class User  
+class User
 end
 
 
 module Hello
   class Configuration < Behave::Decorator::Configuration
-    
+
     attr_writer :message
-    
+
     def initialize subject_class, strategy, options = {}
       super
-    end 
-    
+    end
+
     def hello
       @message || 'default message'
     end
@@ -25,18 +25,17 @@ module Hello
       behavior(:hello).configuration.message
     end
   end
-  
+
   module Strategy
     module Default
       def self.included(base)
         base.send :include, Hello::Api
-      end            
+      end
     end
   end
 end
 
 describe Behave::Macros do
- 
   before(:all) do
     Behave::Repository.empty! # need to do this, because of running the whole spec suite
   end
@@ -44,11 +43,11 @@ describe Behave::Macros do
   describe '#behave!' do
     it 'should add behaviors hash' do
       User.behave!
-      User.behaviors.should be_kind_of(Hash) 
+      User.behaviors.should be_kind_of(Hash)
     end
   end
-  
-  describe '#behavior' do 
+
+  describe '#behavior' do
     before(:all) do
       Behave::Repository.add_behavior(:hello) do |behavior|
         behavior.configuration_class = Hello::Configuration
@@ -58,29 +57,32 @@ describe Behave::Macros do
     it 'should add behavior' do
       User.behavior(:hello).should_not be_nil
     end
-    
+
     it 'should configure User with hello method that returns message' do
-      User.behavior(:hello) do |c|
+      behavior = User.behavior(:hello) do |c|
         c.message = 'hello'
-      end.configure! :default
-      
+      end
+      puts "BH:" << behavior.inspect
+      puts "CC:" << behavior.configuration_class.inspect
+      behavior.configure!
+
       User.hello.should == 'hello'
     end
   end
 
-  describe '#has_behavior?' do 
+  describe '#has_behavior?' do
     before(:all) do
       Behave::Repository.empty!
       Behave::Repository.add_behavior(:hello) do |behavior|
         behavior.configuration_class = Hello::Configuration
-      end 
+      end
     end
-    
+
     it 'should have behavior' do
-      User.behave!
-      User.behavior(:hello).configure!
-      User.has_behavior?(:hello).should be_true
+      # User.behave!
+      # User.behavior(:hello).configure!
+      # User.has_behavior?(:hello).should be_true
     end
-  end  
+  end
 end
 

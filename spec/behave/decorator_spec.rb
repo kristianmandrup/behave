@@ -13,14 +13,16 @@ describe Behave::Decorator do
   before do
     Behave::Repository.empty!
   end
-  
-  describe '#add_behavior' do
-    it 'should add a behavior with config class' do
-      Behave::Repository.add_behavior(:hello) do |behavior|
-        behavior.configuration_class = MyBehavior::Configuration
-      end
-      
-      Behave::Repository.behaviors[:hello].configuration_class.should == MyBehavior::Configuration 
+
+  describe '#decorate' do
+    it 'should decorate a behavior' do
+      pending
+    end
+  end
+
+  describe '#create_behavior_for' do
+    it 'should create a behavior for a subject' do
+      pending
     end
   end
 end

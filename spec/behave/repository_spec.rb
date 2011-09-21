@@ -20,7 +20,7 @@ describe Behave::Repository do
     end
   end
 
-  describe '#behaviors' do 
+  describe '#registered_behaviors' do 
     before(:all) do
       Behave::Repository.add_behavior(:hello) do |behavior|
         behavior.should be_a(Behave::Decorator)
@@ -28,18 +28,14 @@ describe Behave::Repository do
     end
 
     it 'should contain global behaviors' do
-      Behave::Repository.behaviors.should_not be_empty
+      Behave::Repository.registered_behaviors.should_not be_empty
     end
-    
+ end
+
+  describe 'behavior' do
     it 'should have hello' do
-      Behave::Repository.behaviors[:hello].should be_a(Behave::Decorator)
+      Behave::Repository.behavior(:hello).should be_a(Behave::Decorator)
     end
   end
-
-  describe 'behavior' do  
-    it 'should have behavior' do
-      pending
-    end
-  end  
 end
 

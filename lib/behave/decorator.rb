@@ -1,13 +1,14 @@
 module Behave
   class Decorator
-    autoload :Configuration, 'behave/decorator/configuration'
-    
-    attr_accessor :name, :configuration_class
+    autoload_modules :Configuration
+
+    attr_accessor :name
+    attr_accessor :configuration_class
 
     def initialize name
       @name = name
     end
-    
+
     def internal_api name
     end
 
@@ -15,17 +16,16 @@ module Behave
     end
 
     def configuration_class
-      @configuration_class || Configuration
+      @configuration_class || Behave::Decorator::Configuration
     end
-    
+
     def decorate subject_class
-      behavior = create_behavior_for(subject_class)
-      behavior.apply!
+      create_behavior_for(subject_class).apply!
     end
 
     def create_behavior_for subject_class
       Behave::Behavior.new name, subject_class, configuration_class
-    end        
+    end
   end
 end
 

@@ -5,7 +5,7 @@ I realized a while ago that I had come upon a very cool kind of "class decorator
 I will soon try to generalize this pattern into a separate project and then have trole, troles and trole_groups all use this to leverage their functionality. Also, I will make use of an idea that I just had while taking a cold shower (try it sometime if you have a mind block!). 
 The idea is to have an internal default API, and an exposed API that by default is a reflection of the internal API. However the user is free to block parts of the API from being loaded or define his own external API that utilizes the inner API.
 
-Since this is a general purpose decorator pattern, there should also be a kind of Index where you can see which decorators have been applied to an object and what API each such decorator exposes! Cool stuff!!!!  
+Since this is a general purpose decorator pattern, there should also be a kind of Index where you can see which decorators have been applied to an object and what API each such decorator exposes! Cool stuff!!!!
 
 Some example usage:
 <pre>
@@ -30,10 +30,10 @@ I will use the new Decorator API very soon... sth like this:
 User.decorator(:trole_groups).configure(:strategy) :ref_one do |strategy|
   strategy.orm = :mongoid
   strategy.auto_load = true
-end.configure!  
+end.configure!
 </pre>
 
-Awesome!   
+Awesome!
 
 h2.
 
@@ -53,11 +53,11 @@ The Behave::Config encapsulates concepts such as storage, strategy etc. and can 
 <pre>
 class User
   behave!
-  
+
   behavior(:trole_groups).configure(:strategy) :ref_one do |strategy|
     strategy.orm = :mongoid
     strategy.auto_load = true
   end.configure!
-end  
+end
 </pre>
 

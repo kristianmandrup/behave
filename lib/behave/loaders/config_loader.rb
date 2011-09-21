@@ -1,6 +1,6 @@
 module Behave
   class ConfigLoader < BaseLoader
-          
+
     def initialize name, strategy, orm
       super
     end

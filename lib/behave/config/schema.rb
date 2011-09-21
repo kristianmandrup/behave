@@ -15,22 +15,22 @@ module Behave
         configure_generic if generic?
         configure_field if auto_config?(:fields)
         configure_relation if auto_config?(:relations)
-      end         
+      end
 
       # configures main field (fx role field) as a generic accessor
       def configure_generic
         raise "Subject class must be a Class" unless subject_class.is_a?(Class)
-        subject_class.send(:attr_accessor, main_field) # create troles accessor      
+        subject_class.send(:attr_accessor, main_field) # create troles accessor
       end
 
       # configures a single main field on the subject
       # fx if the roles are stored as a Boolean, Integer or String
-      # @note adapter should customize this as needed 
+      # @note adapter should customize this as needed
       def configure_field
       end
 
       # configures model relationships for roles
-      # fx if the roles are stored in an model, either embedded or referenced 
+      # fx if the roles are stored in an model, either embedded or referenced
       # @note adapter should customize this as needed 
       def configure_relation
       end
@@ -62,7 +62,6 @@ module Behave
 
       # from sugar-high gem
       include ClassExt
-                     
       include Helpers # ??
     end
   end

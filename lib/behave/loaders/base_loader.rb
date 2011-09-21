@@ -4,7 +4,7 @@ module Behave
     attr_reader :name, :strategy, :orm
 
     include ClassExt
-    
+
     def initialize name, strategy, orm
       @name = name
       @strategy = strategy
@@ -14,11 +14,11 @@ module Behave
     def singularity
       (strategy =~ /_many$/) ? :many : :one
     end
-    
+
     def strategy_class
       strategy.to_s.camelize
     end
-    
+
     def base_class
       "Base#{singularity.to_s.camelize}"
     end
@@ -31,7 +31,7 @@ module Behave
       ns = namespace
       ns << "::#{orm.to_s.camelize}" if orm
       ns
-    end      
+    end
   end
 
 end

@@ -1,8 +1,6 @@
 module Behave
   class Config
-    autoload :Schema,         'behave/config/schema'
-    autoload :SchemaHelpers,  'behave/config/schema_helpers'
-    autoload :ClassMethods,   'behave/config/class_methods'
+    autoload_modules :Schema, :SchemaHelpers, :ClassMethods
 
     attr_accessor :subject_class, :strategy, :log_on, :generic
     attr_writer   :orm
@@ -19,9 +17,9 @@ module Behave
 
     # Call setter for each key/value pair
     def apply_options! options = {}
-      options.each_pair do |key, value| 
+      options.each_pair do |key, value|
         send("#{key}=", value) if self.respond_to?(:"#{key}=")
-      end      
+      end
     end
 
     # Configure subject with behavior

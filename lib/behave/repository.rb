@@ -1,9 +1,9 @@
 # This will acts as a Repository (singleton) for registering behaviors that then be added to modules/classes of choice using the behavior(name) macro.
 
 module Behave
-  module Repository  
+  module Repository
     module ClassMethods
-      attr_accessor :behaviors
+      attr_accessor :registered_behaviors
 
       # Add a new behavior to the global set of registered behaviors!
       # The behaviors contained here can later be added to subject classes
@@ -17,11 +17,12 @@ module Behave
         registered_behaviors[name] = new_behavior
         yield new_behavior if block
         new_behavior
-      end 
+      end
+      alias_method :add_behavior, :register_behavior
 
       # removes the named behavior from the registered behaviors repo
       def remove_behavior name
-         behaviors.delete name.to_sym
+         registered_behaviors.delete name.to_sym
       end
 
       # clear all registered behaviors!
@@ -31,15 +32,15 @@ module Behave
 
       # initially behaviors in repo should be empty
       # each behavior can be looked up by name, and references a behavior
-      # so a natural fir is to store them in a Hash, where the name is the lookup key
+      # so a natural fit is to store them in a Hash, where the name is the lookup key
       # the behaviors stored should each be an instance of Behave::Decorator
       def registered_behaviors
         @registered_behaviors ||= {}
       end
 
       def behavior name
-        raise ArgumentError, "Behavior '#{name}' already available" if has_behavior?(name)
-        return registered_behaviors[name.to_sym] if has_behavior? name        
+        raise ArgumentError, "Behavior '#{name}' is not available" if !has_behavior?(name)
+        registered_behaviors[name.to_sym]
       end
 
       # checks whether the behaviors hash contains a key for the named behavior
