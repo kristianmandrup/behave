@@ -15,8 +15,8 @@ module Behave
     # This collection should initially be empty
     # It can be populated by Behave::Behavior instances that are configured according to the Behave::Decorators in the repository
     # for the given behavior
-    def behave!
-      self.singleton_class.class_eval %{
+    def self.included(base)
+      base.singleton_class.class_eval %{
         def behaviors
           @behaviors ||= {}
         end
@@ -44,4 +44,10 @@ module Behave
   end
 end
 
-Module.send :include, Behave::Macros
+
+class Module
+  def behave!
+    send :include, Behave::Macros
+  end
+end
+

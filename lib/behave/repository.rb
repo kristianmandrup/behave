@@ -1,4 +1,5 @@
-# This will acts as a Repository (singleton) for registering behaviors that then be added to modules/classes of choice using the behavior(name) macro.
+# This will acts as a Repository (singleton) for registering behaviors that then be added to 
+# modules/classes of choice using the behavior(name) macro.
 
 module Behave
   module Repository
@@ -7,7 +8,7 @@ module Behave
 
       # Add a new behavior to the global set of registered behaviors!
       # The behaviors contained here can later be added to subject classes
-      # 
+      #
       # @param [String, Symbol] the name of the behavior to add
       # @param [block] yields the behavior so that it can be configure
       #

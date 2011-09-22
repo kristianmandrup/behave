@@ -1,6 +1,15 @@
 module Behave
   class Behavior
-    attr_reader :name, :subject_class, :configuration_class, :options
+    # The name of the behavior - this is used to find the behavior decorator of the same name
+    attr_reader :name
+
+    # the subject class on which this behavior will be attached
+    attr_reader :subject_class
+
+    # Defines how the behavior will configure itself with the subject class
+    attr_reader :configuration_class
+
+    attr_reader :options
 
     # set classes to use for config, storage etc, also set general options
     # Example:

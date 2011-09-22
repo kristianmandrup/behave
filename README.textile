@@ -100,7 +100,7 @@ User
 </pre>
 
 
-The #behaviors collection is populated by instanced of Behave::Behavior. 
+The #behaviors collection of the subject class is populated by instances of Behave::Behavior. 
 Each such behavior has a relationship to a Behave::Decorator instance with the same name, registered in the repository (registered_behaviors hash).
 
 <pre>
