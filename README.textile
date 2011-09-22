@@ -1,9 +1,11 @@
 h1. Behave
 
-A standard pattern to easily define and add behavior to a global behavior repository. This pattern contains a macro that makes it easier to add such behaviors to Ruby classes of your choice. 
+A standard pattern to easily define and add behavior to a global behavior repository. 
+This pattern contains a macro that makes it easier to add such behaviors to Ruby classes of your choice. 
 The Behave pattern will be demonstrated by the "troles":https://github.com/kristianmandrup/troles gem for adding role behavior.
 
-Behave also makes it easy to support multiple kinds of datastores via the "schemaker":https://github.com/kristianmandrup/schemaker gem, that takes care of configuring your model relationships. 
+Behave also makes it easy to support multiple kinds of datastores via the "schemaker":https://github.com/kristianmandrup/schemaker gem, 
+that takes care of configuring your model relationships. 
 
 h2. Design
 
@@ -12,9 +14,12 @@ h2. Design
     subject_class
     strategy
     orm
+    (options)
 
     #configure! - applies the configuration to the subject class or module
 </pre>
+
+The Behave::Config is the base class of a Behavior configuration?
 
 <pre>
 User
@@ -25,14 +30,18 @@ User
         subject_class
         configuration_class -> Behave::Decorator::Configuration
 
-        config  -> Trole::Config instance
-        store   -> Trole::Storage instance
+        config  -> Trole::Config instance  < Behave::Config
+        store   -> Trole::Storage instance < Behave::Storage
     :troles =>
       Behave::Behavior
-        config  -> Troles::Config instance
-        store   -> Troles::Storage instance
+        config  -> Troles::Config instance  < Behave::Config
+        store   -> Troles::Storage instance < Behave::Storage
+</pre>
 
+Any module/class that can have behaviors, contains a hash 'behaviors' of named behaviors. 
+Each key in this hash points to a Behavior instance.
 
+<pre>
 Behave::Repository
   registered_behaviors
     :trole
@@ -52,6 +61,8 @@ Behave::Repository
           #setup_storage
           #setup_config
 </pre>
+
+The Repository contains all the behaviors currently available to all modules and classes. 
 
 h2. Usage
 
@@ -89,7 +100,8 @@ User
 </pre>
 
 
-The #behaviors collection is populated by instanced of Behave::Behavior. Each such behavior has a relationship to a Behave::Decorator in the repository with the same name.
+The #behaviors collection is populated by instanced of Behave::Behavior. 
+Each such behavior has a relationship to a Behave::Decorator instance with the same name, registered in the repository (registered_behaviors hash).
 
 <pre>
 Behave::Repository
@@ -97,15 +109,19 @@ Behave::Repository
     :trole -> Behave::Decorator
 </pre>
 
-A Behave::Decorator instance has a Behave::Configuration object that knows how to configure the behavior in a given context.
+A Behave::Decorator instance has a Behave::Decorator::Configuration object that knows how to configure the behavior in a given context.
 
 The Behave::Decorator::Configuration encapsulates concepts such as storage, strategy etc. and can do schema/model configuration (using schemaker). 
 
-Given strategy and orm and some other options, the Behave::Decorator::Configuration instance will know how to load the right data store adapter and find the righ classes for storage, strategy etc. using loaders for the job.
+Given strategy, ORM and some other options, the Behave::Decorator::Configuration instance will know how to load the right 
+data store adapter and find the right classes for storage, strategy etc. using specific loaders for each.
 
 The Behave::Behavior instance will configure the subject using the Behave::Decorator#decorate method.
 
-The result of the #behavior call is a Behave::Behavior object. If you call #configure_with on this Behavior object, you can configure how the behavior is to be applied to the subject. The result of the #configure is a Behave::Config object, where you then lastly call #configure! to apply the configurations on the subject (late binding). 
+The result of the #behavior call is a Behave::Behavior object. If you call #configure_with on this Behavior object, you can configure how the behavior is to be applied to the subject. 
+
+The result of the #configure is a Behave::Config object, where you then lastly call #configure! to apply the configurations on the subject (late binding). 
+
 See the code for more details...
 
 Note: This is currently work in progress... the above is subject to change!

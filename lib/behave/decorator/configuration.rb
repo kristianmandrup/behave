@@ -1,5 +1,12 @@
 module Behave
   class Decorator
+    # This class is used by the Decorator to decorate the subject with the behavior in a given context
+    #
+    # A Behave::Decorator instance has a Behave::Decorator::Configuration object that knows how to configure the 
+    # behavior in a given context.
+    # The Behave::Decorator::Configuration encapsulates concepts such as storage, strategy etc. 
+    # and can do schema/model configuration (using schemaker).
+
     class Configuration
 
       attr_accessor :strategy

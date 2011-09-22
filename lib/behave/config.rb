@@ -1,4 +1,6 @@
 module Behave
+  # The result of the #configure is a Behave::Config object. 
+  # Then you can lastly call #configure! to apply the configurations on the subject (late binding). 
   class Config
     autoload_modules :Schema, :SchemaHelpers, :ClassMethods
 

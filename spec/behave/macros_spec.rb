@@ -69,6 +69,8 @@ describe Behave::Macros do
       end
       behavior.configure!
 
+      User.new.hello.should == 'hello'
+
       # User.hello.should == 'hello'
     end
   end
