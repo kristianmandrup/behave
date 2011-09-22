@@ -30,13 +30,8 @@ module Behave
       return behaviors[name.to_sym] if has_behavior? name
 
       decorator = Behave::Repository.behavior name
-      puts "Decorator:" << decorator.inspect
-      puts "BHH" << decorator.create_behavior_for(self).inspect
-
       behaviors[name.to_sym] = decorator.create_behavior_for(self)
       result = behaviors[name.to_sym]
-      puts "Res:" << result.inspect
-
       yield result if block
       result
     end

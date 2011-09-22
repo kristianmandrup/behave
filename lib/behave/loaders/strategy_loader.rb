@@ -1,22 +1,24 @@
 module Behave
-  class StrategyLoader < BaseLoader
+  module Loaders
+    class StrategyLoader < BaseLoader
 
-    def initialize name, strategy, orm
-      super
-    end
+      def initialize name, strategy, orm
+        super
+      end
 
-    def strategy_module
-      @strategy_module ||= orm_strategy_module || generic_strategy_module
-    end
+      def strategy_module
+        @strategy_module ||= orm_strategy_module || generic_strategy_module
+      end
 
-    protected
+      protected
 
-    def orm_strategy_module
-      @orm_strategy_module ||= find_first_module("#{orm_namespace}::Strategy::#{strategy_class}", "#{namespace}::Strategy::#{base_class}")
-    end
+      def orm_strategy_module
+        @orm_strategy_module ||= find_first_module("#{orm_namespace}::Strategy::#{strategy_class}", "#{namespace}::Strategy::#{base_class}")
+      end
 
-    def generic_strategy_module strategy_name, options
-      @generic_module ||= find_first_module("#{namespace}::Strategy::#{strategy_class}", "#{namespace}::Strategy::#{base_class}")
+      def generic_strategy_module strategy_name, options
+        @generic_module ||= find_first_module("#{namespace}::Strategy::#{strategy_class}", "#{namespace}::Strategy::#{base_class}")
+      end
     end
   end
 end

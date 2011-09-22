@@ -38,11 +38,11 @@ module Behave
     # get the auto configuration settings hash
     def auto_config
       @auto_config ||= {}
-    end 
+    end
 
     # is a certain type of auto configuration enabled?
     def auto_config? name
-      return auto_config[name] if !auto_config[name].nil?      
+      return auto_config[name] if !auto_config[name].nil?
     end
 
     # Get the main field name that is used for the behavior added, fx :troles for roles behavior

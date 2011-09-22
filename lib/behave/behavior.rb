@@ -7,7 +7,8 @@ module Behave
     #   Behave::Behavior.new :troles, subject_class, configuration_class, :message => 'hello'
     #
     # @param [Hash] class hash
-    def intialize name, subject_class, configuration_class, options = {}
+    #
+    def initialize name, subject_class, configuration_class, options = {}
       raise ArgumentError, "A behavior must have a name" if !name && !name.kind_of_label?
       raise ArgumentError, "A behavior must have a subject class" if !subject_class
       raise ArgumentError, "A behavior must have configuration class of type Class" if !configuration_class && !configuration_class.kind_of?(Class)

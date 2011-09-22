@@ -80,7 +80,7 @@ module Behave
       [:storage, :config, :strategy].each do |type|
         class_eval %{
           def #{type}_loader
-            @#{type}_loader ||= #{type.to_s.camelize}Loader.new name, strategy, orm
+            @#{type}_loader ||= Behave::Loaders::#{type.to_s.camelize}Loader.new name, strategy, orm
           end
         }
       end

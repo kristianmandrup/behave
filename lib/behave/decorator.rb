@@ -23,6 +23,8 @@ module Behave
       create_behavior_for(subject_class).apply!
     end
 
+    # protected
+
     def create_behavior_for subject_class
       Behave::Behavior.new name, subject_class, configuration_class
     end

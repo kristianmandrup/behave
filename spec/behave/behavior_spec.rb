@@ -9,24 +9,24 @@ module MyBehavior
   end
 end
 
-describe Behave::Decorator do
+class User
+end
+
+describe Behave::Behavior do
   before do
     Behave::Repository.empty!
   end
 
-  let(:decorator) { Behave::Decorator.new :my_dec }
-
-  describe '#decorate' do
-    let(:subj_class) { MyBehavior }
-
+  describe '#new' do
     it 'should decorate a behavior' do
-      puts decorator.decorate(subj_class)
+      behavior = Behave::Behavior.new :hello, User, MyBehavior::Configuration
+      puts behavior.inspect
     end
   end
 
   describe '#create_behavior_for' do
     it 'should create a behavior for a subject' do
-      puts decorator.send :create_behavior_for, subj_class
     end
   end
 end
+
