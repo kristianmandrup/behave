@@ -7,7 +7,7 @@ module Behave
 
       def initialize name, strategy, orm
         @name = name
-        @strategy = strategy
+        @strategy = strategy || :default
         @orm = orm || Behave::Config.default_orm
       end
 

@@ -15,6 +15,7 @@ module Behave
 
       def initialize name, subject_class, options = {}
         @name = name
+
         @subject_class = subject_class
         @strategy = options[:strategy]
         @orm = options[:orm] || Behave::Config.default_orm
@@ -24,14 +25,17 @@ module Behave
 
         classes = options.select{|k, v| k.to_s =~ /_class$/} # extract keys ending with _class
         options.delete_if {|k,v| classes.include? k} # remaining keys are normal options
+        set_classes classes
 
+        @options = options
+      end
+
+      def set_classes classes
         # set config_class etc. using hash (optional config option in case you want to override defaults)
         classes.each_pair do |name, clazz|
           meth = "#{name}_class="
           send(meth, clazz) if self.respond_to?(meth) && clazz.is_a(Class)
         end
-
-        @options = options
       end
 
       # this is used to load a specific ORM adapter, such as for Active Record or Mongoid etc. 

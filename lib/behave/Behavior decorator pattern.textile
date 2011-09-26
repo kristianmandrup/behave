@@ -1,11 +1,16 @@
 h2. The Ruby Class Decorator (RCD) pattern is born!!!
 
-I realized a while ago that I had come upon a very cool kind of "class decorator" design pattern that can be generalized to any gem that "decorates" a class (or perhaps multiple classes) with certain behavior. Gems such as _act_as_xxx_ come to mind fx.
+I realized a while ago that I had come upon a very cool kind of "class decorator" design pattern that can be generalized to any 
+gem that "decorates" a class (or perhaps multiple classes) with certain behavior. Gems such as _act_as_xxx_ come to mind fx.
 
-I will soon try to generalize this pattern into a separate project and then have trole, troles and trole_groups all use this to leverage their functionality. Also, I will make use of an idea that I just had while taking a cold shower (try it sometime if you have a mind block!). 
-The idea is to have an internal default API, and an exposed API that by default is a reflection of the internal API. However the user is free to block parts of the API from being loaded or define his own external API that utilizes the inner API.
+I will soon try to generalize this pattern into a separate project and then have the gems _trole_, _troles_ and _trole_groups_ all 
+use this to leverage their functionality. 
+Also, I will make use of an idea that I just had while taking a cold shower (try it sometime if you have a mind block!). 
+The idea is to have an internal default API, and an exposed API that by default is a reflection of the internal API. 
+However the user is free to block parts of the API from being loaded or define his own external API that utilizes the inner API.
 
-Since this is a general purpose decorator pattern, there should also be a kind of Index where you can see which decorators have been applied to an object and what API each such decorator exposes! Cool stuff!!!!
+Since this is a general purpose decorator pattern, there should also be a kind of Index where you can see which decorators have 
+been applied to an object and what API each such decorator exposes! Cool stuff!!!!
 
 Some example usage:
 <pre>

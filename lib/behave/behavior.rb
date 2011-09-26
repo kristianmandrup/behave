@@ -37,6 +37,7 @@ module Behave
     # what is the minimal list of things to do for any behavior, and what are the nice "add-ons" 
     # and how can we make a flexible hook-system for these?
     def configure_with strategy = :default, options = {}, &block
+      @options[:strategy] = strategy
       configuration.strategy = strategy
       # use configuration to load adapter!
       configuration.load_adapter

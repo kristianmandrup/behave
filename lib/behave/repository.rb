@@ -10,14 +10,13 @@ module Behave
       # The behaviors contained here can later be added to subject classes
       #
       # @param [String, Symbol] the name of the behavior to add
-      # @param [block] yields the behavior so that it can be configure
+      # @param [block] yields the behavior so that it can be further configured
       #
       def register_behavior name, &block
         raise ArgumentError, "Behavior '#{name}' already available" if has_behavior?(name)
-        new_behavior = create_behavior name
-        registered_behaviors[name] = new_behavior
-        yield new_behavior if block
-        new_behavior
+        registered_behaviors[name] = create_behavior name
+        yield registered_behaviors[name] if block
+        registered_behaviors[name]
       end
       alias_method :add_behavior, :register_behavior
 

@@ -26,20 +26,25 @@ module Behave
     # returns the given named behavior from the subject's list of behaviors
     # @return [Behave::Behavior] the named behavior
     def behavior name, &block
-      behave! unless respond_to? :behaviors
-      return behaviors[name.to_sym] if has_behavior? name
+      has_behavior?(name) ? behaviors[name.to_sym] : get_behavior(name)
+    end
 
-      decorator = Behave::Repository.behavior name
-      behaviors[name.to_sym] = decorator.create_behavior_for(self)
+    # @return [true, false] true if the given behavior is already in the subject's list of behaviors
+    def has_behavior? name
+      behaviors.keys.include? name.to_sym
+    end
+
+    protected
+
+    def get_behavior name
+      behaviors[name.to_sym] = decorator_for(name).create_behavior_for(self)
       result = behaviors[name.to_sym]
       yield result if block
       result
     end
 
-    # @return [true, false] true if the given behavior is already in the subject's list of behaviors
-    def has_behavior? name
-      return false unless respond_to? :behaviors
-      behaviors.keys.include? name.to_sym
+    def decorator_for name
+      Behave::Repository.behavior name
     end
   end
 end

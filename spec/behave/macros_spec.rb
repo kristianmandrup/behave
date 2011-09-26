@@ -24,9 +24,12 @@ module Hello
   end
 end
 
+# This is the implementation of the hello behavior
 module Hello
   module Api
     def hello
+      puts "Hello you!"
+      # use the hello behavior configuration
       behavior(:hello).configuration.message
     end
   end
@@ -34,11 +37,13 @@ module Hello
   module Strategy
     module Default
       def self.included(base)
+        puts "Strategy Default for #{base}"
         base.send :include, Hello::Api
       end
     end
   end
 end
+
 
 describe Behave::Macros do
   before(:all) do
@@ -70,8 +75,6 @@ describe Behave::Macros do
       behavior.configure!
 
       User.new.hello.should == 'hello'
-
-      # User.hello.should == 'hello'
     end
   end
 
