@@ -1,50 +1,43 @@
 class User
 end
 
-
-module Hello
+module Troles
   class Configuration < Behave::Decorator::Configuration
 
-    attr_writer :message
+    attr_writer :valid_roles
 
     def initialize subject_class, strategy, options = {}
       super
     end
 
-    def message
-      @message || 'default message'
+    def valid_roles
+      @valid_roles || [:guest, :admin]
     end
   end
 
   class Config
+    attr_accessor :valid_roles
+
     def apply_options! options={}
     end
   end
 end
 
 # This is the implementation of the hello behavior
-module Hello
+module Troles
   module Api
-    def hello
+    def valid_roles
       # use the hello behavior configuration
-      self.class.behavior(:hello).configuration.message
+      self.class.behavior(:troles).configuration.valid_roles
     end
   end
 
   module Strategy
     module Default
       def self.included(base)
-        puts "Strategy Default for #{}"
-        base.send :include, Hello::Api
-      end
-    end
-
-    module MyStrategy
-      def self.included(base)
-        puts "Strategy MyStrategy for #{base}"
-        base.send :include, Hello::Api
+      	puts "add Strategy Default api to #{base}"
+        base.send :include, Troles::Api
       end
     end
   end
 end
-
