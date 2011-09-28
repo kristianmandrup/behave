@@ -14,12 +14,38 @@ describe Behave::Repository do
     end
 
     it 'should add a behavior with config class' do
-      Behave::Repository.add_behavior(:hello) do |behavior|
+      Behave::Repository.add_behavior(:hey) do |behavior|
         behavior.should be_a(Behave::Decorator)
-      end
+      end.should be_a(Behave::Decorator)
     end
   end
 
+  describe '#register_behavior' do
+    it 'should add a named behavior' do
+      Behave::Repository.register_behavior(:hi).should be_a(Behave::Decorator)
+    end
+  end
+
+  describe '#has_behavior?' do
+    it 'should add a named behavior' do
+      Behave::Repository.has_behavior?(:hi).should be_true
+    end
+  end
+
+  describe '#remove_behavior' do
+    it 'should remove a named behavior' do
+      Behave::Repository.remove_behavior(:hi)
+      Behave::Repository.has_behavior?(:hi).should be_false
+    end    
+  end
+
+  describe '#empty!' do
+    it 'should remove all behaviors' do
+      Behave::Repository.empty!
+      Behave::Repository.registered_behaviors.should be_empty
+    end    
+  end
+  
   describe '#registered_behaviors' do 
     before(:all) do
       Behave::Repository.add_behavior(:hello) do |behavior|
@@ -27,7 +53,7 @@ describe Behave::Repository do
       end
     end
 
-    it 'should contain global behaviors' do
+    it 'should contain globally registered behaviors' do
       Behave::Repository.registered_behaviors.should_not be_empty
     end
  end
@@ -38,4 +64,3 @@ describe Behave::Repository do
     end
   end
 end
-

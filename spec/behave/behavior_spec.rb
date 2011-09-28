@@ -1,59 +1,8 @@
 require 'behave/spec_helper'
-
-# example Config class for behavior
-module MyBehavior
-  class Configuration < Behave::Decorator::Configuration
-    def initialize subject_class, strategy, options = {}
-      super
-    end
-  end
-end
-
-class User
-end
-
-module Hello
-  class Configuration < Behave::Decorator::Configuration
-
-    attr_writer :message
-
-    def initialize subject_class, strategy, options = {}
-      super
-    end
-
-    def hello
-      @message || 'default message'
-    end
-  end
-
-  class Config
-    def apply_options! options={}
-    end
-  end
-end
-
-module MyBehavior
-  module Api
-    def hello
-      "Hello you!"
-    end
-  end
-end
-
-# This is the implementation of the hello behavior
-module Hello
-  module Strategy
-    module MyStrategy
-      def self.included(base)
-        # could also use contextualize here!!!
-        base.send :include, MyBehavior::Api
-      end
-    end
-  end
-end
+require 'fixtures/models'
 
 describe Behave::Behavior do
-  let(:behavior) { Behave::Behavior.new :hello, User, MyBehavior::Configuration }
+  let(:behavior) { Behave::Behavior.new :hello, User, Hello::Configuration }
 
   before do
     Behave::Repository.empty!
@@ -63,7 +12,7 @@ describe Behave::Behavior do
     it 'should create a behavior' do
       behavior.name.should == :hello
       behavior.subject_class.should == User
-      behavior.configuration_class.should == MyBehavior::Configuration
+      behavior.configuration_class.should == Hello::Configuration
     end
   end
 

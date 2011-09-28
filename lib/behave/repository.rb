@@ -21,14 +21,16 @@ module Behave
       alias_method :add_behavior, :register_behavior
 
       # removes the named behavior from the registered behaviors repo
-      def remove_behavior name
+      def unregister_behavior name
          registered_behaviors.delete name.to_sym
       end
+      alias_method :remove_behavior, :unregister_behavior
 
       # clear all registered behaviors!
       def empty!
         registered_behaviors.clear
       end
+      alias_method :clear!, :empty!
 
       # initially behaviors in repo should be empty
       # each behavior can be looked up by name, and references a behavior
