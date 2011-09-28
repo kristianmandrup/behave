@@ -3,9 +3,8 @@ h2. The Ruby Class Decorator (RCD) pattern is born!!!
 I realized a while ago that I had come upon a very cool kind of "class decorator" design pattern that can be generalized to any 
 gem that "decorates" a class (or perhaps multiple classes) with certain behavior. Gems such as _act_as_xxx_ come to mind fx.
 
-I will soon try to generalize this pattern into a separate project and then have the gems _trole_, _troles_ and _trole_groups_ all 
-use this to leverage their functionality. 
-Also, I will make use of an idea that I just had while taking a cold shower (try it sometime if you have a mind block!). 
+Behve tries to generalize this pattern.
+
 The idea is to have an internal default API, and an exposed API that by default is a reflection of the internal API. 
 However the user is free to block parts of the API from being loaded or define his own external API that utilizes the inner API.
 
@@ -38,19 +37,18 @@ User.decorator(:trole_groups).configure(:strategy) :ref_one do |strategy|
 end.configure!
 </pre>
 
-Awesome!
 
 h2.
 
-The idea is that you should be able to apply the behave pattern on a class:
+The idea is that you should be able to apply the behave pattern on a class or an object:
 
 <pre>
-class User
-  behave!
-end
+User.behave!
+
+Project.new.behave!
 </pre>
 
-This will add a #behavior collection at the class level, where each item is a Behave::Decorator instance. 
+This will add a #behavior collection where each item is a Behave::Decorator instance.
 Each such Behave::Decorator instance has a Behave::Config object that configures it.
 
 The Behave::Config encapsulates concepts such as storage, strategy etc. and can do schema/model configuration (using schemaker) etc.
@@ -62,7 +60,9 @@ class User
   behavior(:trole_groups).configure(:strategy) :ref_one do |strategy|
     strategy.orm = :mongoid
     strategy.auto_load = true
-  end.configure!
+  end
 end
+
+User.behavior(:trole_groups).apply!
 </pre>
 

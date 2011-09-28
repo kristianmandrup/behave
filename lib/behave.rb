@@ -1,4 +1,5 @@
 require 'sweetloader'
+require 'contextualize'
 require 'sugar-high/kind_of'
 require 'behave/macros'
 

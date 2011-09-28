@@ -13,7 +13,7 @@ module Hello
       super
     end
 
-    def hello
+    def message
       @message || 'default message'
     end
   end
@@ -30,7 +30,7 @@ module Hello
     def hello
       puts "Hello you!"
       # use the hello behavior configuration
-      behavior(:hello).configuration.message
+      self.class.behavior(:hello).configuration.message
     end
   end
 
@@ -40,6 +40,21 @@ module Hello
         puts "Strategy Default for #{base}"
         base.send :include, Hello::Api
       end
+    end
+  end
+end
+
+
+describe Behave::Macros do
+  before(:all) do
+    Behave::Repository.empty! # need to do this, because of running the whole spec suite
+  end
+
+  describe '#behave!' do
+    let(:user) { User.new }
+    it 'should add behaviors hash' do
+      user.behave!
+      user.behaviors.should be_kind_of(Hash)
     end
   end
 end
@@ -69,10 +84,9 @@ describe Behave::Macros do
     end
 
     it 'should configure User with hello method that returns message' do
-      behavior = User.behavior(:hello) do |c|
-        c.message = 'hello'
-      end
-      behavior.configure!
+      User.behavior(:hello) do |behavior|
+        behavior.configuration.message = 'hello'
+      end.apply!
 
       User.new.hello.should == 'hello'
     end
