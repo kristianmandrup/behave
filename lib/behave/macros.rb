@@ -6,22 +6,12 @@
 #
 # Usage:
 #   class User
-#     troles_strategy :bit_many
+#     behave!
 #
 #
-class Object
-  def metaclass
-    class << self; self; end
-  end
-end
-
-
 module Behave
   module Macros
     def self.extended(base)
-      base.metaclass.send(:define_method, :behaviors) do
-        @behaviors ||= {}
-      end
       base.mixin InstanceMethods
     end
 
@@ -30,15 +20,14 @@ module Behave
     # It can be populated by Behave::Behavior instances that are configured according to the Behave::Decorators in the repository
     # for the given behavior
     def self.included(base)
-      base.singleton_class.class_eval %{
-        def behaviors
-          @behaviors ||= {}
-        end
-      }
       base.extend InstanceMethods
     end
 
     module InstanceMethods
+      def behaviors
+        @behaviors ||= {}
+      end
+
       # returns the given named behavior from the subject's list of behaviors
       # @return [Behave::Behavior] the named behavior
       def behavior name, &block
